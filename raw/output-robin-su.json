@@ -1,0 +1,197 @@
+robin@Tokyo-AVD:/mnt/c/Users/SystemAdministrator$ az vmss update \
+   -g central-us-amd \
+   -n test-vmss \
+   --set virtualMachineProfile.storageProfile.dataDisks[0].diskIOPSReadWrite=16000 \
+        virtualMachineProfile.storageProfile.dataDisks[0].diskMBpsReadWrite=1000
+
+{
+  "additionalCapabilities": {
+    "hibernationEnabled": false
+  },
+  "constrainedMaximumCapacity": false,
+  "etag": "\"6\"",
+  "highSpeedInterconnectPlacement": "None",
+  "id": "/subscriptions/679516e6-d394-4a60-9524-2938d7f63cc2/resourceGroups/central-us-amd/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss",
+  "location": "centralus",
+  "name": "test-vmss",
+  "orchestrationMode": "Flexible",
+  "platformFaultDomainCount": 1,
+  "provisioningState": "Succeeded",
+  "resourceGroup": "central-us-amd",
+  "scaleInPolicy": {
+    "forceDeletion": false,
+    "rules": [
+      "Default"
+    ]
+  },
+  "singlePlacementGroup": false,
+  "sku": {
+    "capacity": 0,
+    "name": "Standard_E4as_v7",
+    "tier": "Standard"
+  },
+  "timeCreated": "2026-05-12T07:58:47.9250241+00:00",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "uniqueId": "986fcb0e-99f0-41da-b58b-a5bf5f804139",
+  "upgradePolicy": {
+    "mode": "Manual"
+  },
+  "virtualMachineProfile": {
+    "diagnosticsProfile": {
+      "bootDiagnostics": {
+        "enabled": true
+      }
+    },
+    "extensionProfile": {
+      "extensions": []
+    },
+    "networkProfile": {
+      "networkApiVersion": "2020-11-01",
+      "networkInterfaceConfigurations": [
+        {
+          "auxiliaryMode": "None",
+          "auxiliarySku": "None",
+          "deleteOption": "Delete",
+          "disableTcpStateTracking": false,
+          "dnsSettings": {
+            "dnsServers": []
+          },
+          "enableAcceleratedNetworking": false,
+          "enableIPForwarding": false,
+          "ipConfigurations": [
+            {
+              "applicationGatewayBackendAddressPools": [],
+              "applicationSecurityGroups": [],
+              "loadBalancerBackendAddressPools": [],
+              "name": "vnet-centralus-dev-nic01-defaultIpConfiguration",
+              "primary": true,
+              "privateIPAddressVersion": "IPv4",
+              "publicIPAddressConfiguration": {
+                "idleTimeoutInMinutes": 15,
+                "ipTags": [],
+                "name": "publicIp-vnet-centralus-dev-nic01",
+                "publicIPAddressVersion": "IPv4"
+              },
+              "subnet": {
+                "id": "/subscriptions/679516e6-d394-4a60-9524-2938d7f63cc2/resourceGroups/central-us-amd/providers/Microsoft.Network/virtualNetworks/vnet-centralus-dev/subnets/snet-centralus-pub",
+                "resourceGroup": "central-us-amd"
+              }
+            }
+          ],
+          "name": "vnet-centralus-dev-nic01",
+          "networkSecurityGroup": {
+            "id": "/subscriptions/679516e6-d394-4a60-9524-2938d7f63cc2/resourceGroups/central-us-amd/providers/Microsoft.Network/networkSecurityGroups/basicNsgvnet-centralus-dev-nic01",
+            "resourceGroup": "central-us-amd"
+          },
+          "primary": true
+        }
+      ]
+    },
+    "osProfile": {
+      "adminUsername": "azureuser",
+      "allowExtensionOperations": true,
+      "computerNamePrefix": "test-vmss",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "patchSettings": {
+          "assessmentMode": "ImageDefault",
+          "patchMode": "ImageDefault"
+        },
+        "provisionVMAgent": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "keyData": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINT+t2LgnrVUw0m9eCKu4slKuYkbIY1EXBMXBDb2Uv8E generated-by-azure",
+              "path": "/home/azureuser/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "requireGuestProvisionSignal": true,
+      "secrets": []
+    },
+    "securityProfile": {
+      "securityType": "TrustedLaunch",
+      "uefiSettings": {
+        "secureBootEnabled": true,
+        "vTpmEnabled": true
+      }
+    },
+    "storageProfile": {
+      "dataDisks": [
+        {
+          "caching": "None",
+          "createOption": "Empty",
+          "deleteOption": "Delete",
+          "diskIOPSReadWrite": 16000,
+          "diskMBpsReadWrite": 1000,
+          "diskSizeGB": 1024,
+          "lun": 0,
+          "managedDisk": {
+            "storageAccountType": "PremiumV2_LRS"
+          },
+          "writeAcceleratorEnabled": false
+        }
+      ],
+      "diskControllerType": "NVMe",
+      "imageReference": {
+        "offer": "ubuntu-24_04-lts",
+        "publisher": "canonical",
+        "sku": "server",
+        "version": "latest"
+      },
+      "osDisk": {
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "deleteOption": "Delete",
+        "diskSizeGB": 30,
+        "managedDisk": {
+          "storageAccountType": "Premium_LRS"
+        },
+        "osType": "Linux"
+      }
+    },
+    "timeCreated": "2026-05-12T08:07:36.0277663+00:00"
+  },
+  "zoneBalance": false,
+  "zones": [
+    "1",
+    "2",
+    "3"
+  ]
+}
+
+robin@Tokyo-AVD:/mnt/c/Users/SystemAdministrator$  az vmss show \
+   -g central-us-amd \
+   -n test-vmss \
+   --query "virtualMachineProfile.storageProfile.dataDisks[].{lun:lun, diskSizeGB:diskSizeGB, diskIOPSReadWrite:diskIOPSReadWrite, diskMBpsReadWrite:diskMBpsReadWrite}" \
+   -o table
+
+Lun
+-----
+0
+
+robin@Tokyo-AVD:/mnt/c/Users/SystemAdministrator$  az vmss show \
+   -g central-us-amd \
+   -n test-vmss \
+   --query "virtualMachineProfile.storageProfile.dataDisks[]" \
+   -o json
+
+[
+  {
+    "caching": "None",
+    "createOption": "Empty",
+    "deleteOption": "Delete",
+    "diskIopsReadWrite": null,
+    "diskMBpsReadWrite": null,
+    "diskSizeGb": 1024,
+    "lun": 0,
+    "managedDisk": {
+      "diskEncryptionSet": null,
+      "securityProfile": null,
+      "storageAccountType": "PremiumV2_LRS"
+    },
+    "name": null,
+    "writeAcceleratorEnabled": false
+  }
+] 

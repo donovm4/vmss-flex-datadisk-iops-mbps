@@ -1,0 +1,164 @@
+{
+    "apiVersion": "2025-11-01",
+    "id": "/subscriptions/d717cc8e-8af6-4764-bb9a-c86a529be857/resourceGroups/rg-konv/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss",
+    "name": "test-vmss",
+    "type": "microsoft.compute/virtualmachinescalesets",
+    "sku": {
+        "name": "Mix",
+        "capacity": 2
+    },
+    "location": "canadacentral",
+    "zones": [
+        "1",
+        "2"
+    ],
+    "properties": {
+        "singlePlacementGroup": false,
+        "highSpeedInterconnectPlacement": "None",
+        "orchestrationMode": "Flexible",
+        "upgradePolicy": {
+            "mode": "Manual"
+        },
+        "scaleInPolicy": {
+            "rules": [
+                "Default"
+            ],
+            "forceDeletion": false
+        },
+        "virtualMachineProfile": {
+            "osProfile": {
+                "computerNamePrefix": "test-vmss",
+                "windowsConfiguration": {
+                    "provisionVMAgent": true,
+                    "enableAutomaticUpdates": true,
+                    "patchSettings": {
+                        "patchMode": "AutomaticByOS",
+                        "assessmentMode": "ImageDefault",
+                        "enableHotpatching": false
+                    },
+                    "enableVMAgentPlatformUpdates": true
+                },
+                "secrets": [],
+                "allowExtensionOperations": true,
+                "requireGuestProvisionSignal": true,
+                "adminUsername": "VMSS-Admin"
+            },
+            "storageProfile": {
+                "osDisk": {
+                    "osType": "Windows",
+                    "createOption": "FromImage",
+                    "caching": "ReadWrite",
+                    "managedDisk": {
+                        "storageAccountType": "Premium_ZRS"
+                    },
+                    "deleteOption": "Delete",
+                    "diskSizeGB": 127
+                },
+                "imageReference": {
+                    "publisher": "MicrosoftWindowsServer",
+                    "offer": "WindowsServer",
+                    "sku": "2025-datacenter-g2",
+                    "version": "latest"
+                },
+                "dataDisks": [
+                    {
+                        "lun": 0,
+                        "diskIOPSReadWrite": 5000,
+                        "diskMBpsReadWrite": 150,
+                        "createOption": "Empty",
+                        "caching": "None",
+                        "writeAcceleratorEnabled": false,
+                        "managedDisk": {
+                            "storageAccountType": "PremiumV2_LRS"
+                        },
+                        "deleteOption": "Delete",
+                        "diskSizeGB": 1024
+                    }
+                ],
+                "diskControllerType": "SCSI"
+            },
+            "networkProfile": {
+                "networkApiVersion": "2020-11-01",
+                "networkInterfaceConfigurations": [
+                    {
+                        "name": "vnet-canadacentral-nic01",
+                        "properties": {
+                            "primary": true,
+                            "enableAcceleratedNetworking": false,
+                            "disableTcpStateTracking": false,
+                            "effectiveEnableAcceleratedNetworking": false,
+                            "enableIPForwarding": false,
+                            "delegateIpAllocation": false,
+                            "auxiliaryMode": "None",
+                            "auxiliarySku": "None",
+                            "nicAuxiliarySkuBillingNotificationType": "NoOp",
+                            "deleteOption": "Delete",
+                            "ipConfigurations": [
+                                {
+                                    "name": "vnet-canadacentral-nic01-defaultIpConfiguration",
+                                    "properties": {
+                                        "privateIPAddressVersion": "IPv4",
+                                        "subnet": {
+                                            "id": "/subscriptions/d717cc8e-8af6-4764-bb9a-c86a529be857/resourceGroups/rg-konv/providers/Microsoft.Network/virtualNetworks/vnet-canadacentral/subnets/snet-canadacentral-1"
+                                        },
+                                        "primary": true,
+                                        "publicIPAddressConfiguration": {
+                                            "name": "publicIp-vnet-canadacentral-nic01",
+                                            "properties": {
+                                                "idleTimeoutInMinutes": 15,
+                                                "ipTags": [],
+                                                "publicIPAddressVersion": "IPv4"
+                                            }
+                                        },
+                                        "applicationSecurityGroups": [],
+                                        "loadBalancerBackendAddressPools": [],
+                                        "applicationGatewayBackendAddressPools": []
+                                    }
+                                }
+                            ],
+                            "networkSecurityGroup": {
+                                "id": "/subscriptions/d717cc8e-8af6-4764-bb9a-c86a529be857/resourceGroups/rg-konv/providers/Microsoft.Network/networkSecurityGroups/basicNsgvnet-canadacentral-nic01"
+                            },
+                            "dnsSettings": {
+                                "dnsServers": []
+                            }
+                        }
+                    }
+                ]
+            },
+            "diagnosticsProfile": {
+                "bootDiagnostics": {
+                    "enabled": true
+                }
+            },
+            "extensionProfile": {
+                "extensions": []
+            },
+            "securityProfile": {
+                "securityType": "Standard"
+            },
+            "timeCreated": "2026-05-18T17:58:52.352Z"
+        },
+        "additionalCapabilities": {
+            "hibernationEnabled": false
+        },
+        "provisioningState": "Succeeded",
+        "uniqueId": "c73b2781-cba6-4b89-976d-bf226fa8ad2d",
+        "zoneBalance": false,
+        "platformFaultDomainCount": 1,
+        "constrainedMaximumCapacity": false,
+        "skuProfile": {
+            "vmSizes": [
+                {
+                    "name": "Standard_B2as_v2"
+                },
+                {
+                    "name": "Standard_D2s_v3"
+                }
+            ],
+            "allocationStrategy": "CapacityOptimized"
+        },
+        "timeCreated": "2026-05-18T17:22:08.485Z"
+    },
+    "etag": "\"2\""
+}

@@ -1,0 +1,166 @@
+donovan [ ~ ]$ az vmss update \
+  --resource-group "rg-konv" \
+  --name "test-vmss" \
+  --set \              
+    virtualMachineProfile.storageProfile.dataDisks[0].diskIOPSReadWrite=5000 \              
+    virtualMachineProfile.storageProfile.dataDisks[0].diskMBpsReadWrite=150
+              
+{
+  "additionalCapabilities": {
+    "hibernationEnabled": false
+  },
+  "constrainedMaximumCapacity": false,
+  "etag": "\"2\"",
+  "highSpeedInterconnectPlacement": "None",
+  "id": "/subscriptions/d717cc8e-8af6-4764-bb9a-c86a529be857/resourceGroups/rg-konv/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss",
+  "location": "canadacentral",
+  "name": "test-vmss",
+  "orchestrationMode": "Flexible",
+  "platformFaultDomainCount": 1,
+  "provisioningState": "Succeeded",
+  "resourceGroup": "rg-konv",
+  "scaleInPolicy": {
+    "forceDeletion": false,
+    "rules": [
+      "Default"
+    ]
+  },
+  "singlePlacementGroup": false,
+  "sku": {
+    "capacity": 2,
+    "name": "Mix"
+  },
+  "skuProfile": {
+    "allocationStrategy": "CapacityOptimized",
+    "vmSizes": [
+      {
+        "name": "Standard_B2as_v2"
+      },
+      {
+        "name": "Standard_D2s_v3"
+      }
+    ]
+  },
+  "timeCreated": "2026-05-18T17:22:08.4855702+00:00",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "uniqueId": "c73b2781-cba6-4b89-976d-bf226fa8ad2d",
+  "upgradePolicy": {
+    "mode": "Manual"
+  },
+  "virtualMachineProfile": {
+    "diagnosticsProfile": {
+      "bootDiagnostics": {
+        "enabled": true
+      }
+    },
+    "extensionProfile": {
+      "extensions": []
+    },
+    "networkProfile": {
+      "networkApiVersion": "2020-11-01",
+      "networkInterfaceConfigurations": [
+        {
+          "auxiliaryMode": "None",
+          "auxiliarySku": "None",
+          "deleteOption": "Delete",
+          "disableTcpStateTracking": false,
+          "dnsSettings": {
+            "dnsServers": []
+          },
+          "enableAcceleratedNetworking": false,
+          "enableIPForwarding": false,
+          "ipConfigurations": [
+            {
+              "applicationGatewayBackendAddressPools": [],
+              "applicationSecurityGroups": [],
+              "loadBalancerBackendAddressPools": [],
+              "name": "vnet-canadacentral-nic01-defaultIpConfiguration",
+              "primary": true,
+              "privateIPAddressVersion": "IPv4",
+              "publicIPAddressConfiguration": {
+                "idleTimeoutInMinutes": 15,
+                "ipTags": [],
+                "name": "publicIp-vnet-canadacentral-nic01",
+                "publicIPAddressVersion": "IPv4"
+              },
+              "subnet": {
+                "id": "/subscriptions/d717cc8e-8af6-4764-bb9a-c86a529be857/resourceGroups/rg-konv/providers/Microsoft.Network/virtualNetworks/vnet-canadacentral/subnets/snet-canadacentral-1",
+                "resourceGroup": "rg-konv"
+              }
+            }
+          ],
+          "name": "vnet-canadacentral-nic01",
+          "networkSecurityGroup": {
+            "id": "/subscriptions/d717cc8e-8af6-4764-bb9a-c86a529be857/resourceGroups/rg-konv/providers/Microsoft.Network/networkSecurityGroups/basicNsgvnet-canadacentral-nic01",
+            "resourceGroup": "rg-konv"
+          },
+          "primary": true
+        }
+      ]
+    },
+    "osProfile": {
+      "adminUsername": "VMSS-Admin",
+      "allowExtensionOperations": true,
+      "computerNamePrefix": "test-vmss",
+      "requireGuestProvisionSignal": true,
+      "secrets": [],
+      "windowsConfiguration": {
+        "enableAutomaticUpdates": true,
+        "enableVMAgentPlatformUpdates": true,
+        "patchSettings": {
+          "assessmentMode": "ImageDefault",
+          "enableHotpatching": false,
+          "patchMode": "AutomaticByOS"
+        },
+        "provisionVMAgent": true
+      }
+    },
+    "storageProfile": {
+      "dataDisks": [
+        {
+          "caching": "None",
+          "createOption": "Empty",
+          "deleteOption": "Delete",
+          "diskIOPSReadWrite": 5000,
+          "diskMBpsReadWrite": 150,
+          "diskSizeGB": 1024,
+          "lun": 0,
+          "managedDisk": {
+            "storageAccountType": "PremiumV2_LRS"
+          },
+          "writeAcceleratorEnabled": false
+        }
+      ],
+      "diskControllerType": "SCSI",
+      "imageReference": {
+        "offer": "WindowsServer",
+        "publisher": "MicrosoftWindowsServer",
+        "sku": "2025-datacenter-g2",
+        "version": "latest"
+      },
+      "osDisk": {
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "deleteOption": "Delete",
+        "diskSizeGB": 127,
+        "managedDisk": {
+          "storageAccountType": "Premium_ZRS"
+        },
+        "osType": "Windows"
+      }
+    },
+    "timeCreated": "2026-05-18T17:58:52.352535+00:00"
+  },
+  "zoneBalance": false,
+  "zones": [
+    "1",
+    "2"
+  ]
+}
+
+donovan [ ~ ]$ az vmss show --resource-group "rg-konv" --name "test-vmss" --query "virtualMachineProfile.storageProfile.dataDisks[].{lun:lun,sku:managedDisk.storageAccountType,sizeGB:di
+skSizeGB,iops:diskIOPSReadWrite,mbps:diskMBpsReadWrite,caching:caching}" --output table
+
+Lun    Sku            SizeGB    Iops    Mbps    Caching
+-----  -------------  --------  ------  ------  ---------
+0      PremiumV2_LRS  1024      5000    150     None
