@@ -6,7 +6,7 @@
 
 ## Current Workaround (as of 5/18/2026)
 
-Leverage the azure cli commands
+User is not able to specify Premium SSD v2 IOPS/throughput for VMSS Flexible mode at the VMSS level, through the Portal. This should be possible through Azure CLI.
 
 ---
 
