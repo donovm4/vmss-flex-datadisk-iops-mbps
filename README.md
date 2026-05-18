@@ -1,164 +1,12 @@
 # Manus E2B VMSS Flexible Data Disk IOPS/MBps
 
-## Robin's Testing
+## Problem
 
-### Update
+![image](./media/error-portal.png)
 
-Command:
+## Current Workaround (as of 5/18/2026)
 
-```cmd
-az vmss update \
-   -g central-us-amd \
-   -n test-vmss \
-   --set virtualMachineProfile.storageProfile.dataDisks[0].diskIOPSReadWrite=16000 \
-   virtualMachineProfile.storageProfile.dataDisks[0].diskMBpsReadWrite=1000
-```
-
-Response:
-
-```json
-{
-  "additionalCapabilities": {
-    "hibernationEnabled": false
-  },
-  "constrainedMaximumCapacity": false,
-  "etag": "\"6\"",
-  "highSpeedInterconnectPlacement": "None",
-  "id": "/subscriptions/.../resourceGroups/central-us-amd/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss",
-  "location": "centralus",
-  "name": "test-vmss",
-  "orchestrationMode": "Flexible",
-  "platformFaultDomainCount": 1,
-  "provisioningState": "Succeeded",
-  "resourceGroup": "central-us-amd",
-  "scaleInPolicy": {
-    "forceDeletion": false,
-    "rules": [
-      "Default"
-    ]
-  },
-  "singlePlacementGroup": false,
-  "sku": {
-    "capacity": 0,
-    "name": "Standard_E4as_v7",
-    "tier": "Standard"
-  },
-  "timeCreated": "2026-05-12T07:58:47.9250241+00:00",
-  "type": "Microsoft.Compute/virtualMachineScaleSets",
-  "uniqueId": "986fcb0e-99f0-41da-b58b-a5bf5f804139",
-  "upgradePolicy": {
-    "mode": "Manual"
-  },
-  "virtualMachineProfile": {
-    "diagnosticsProfile": {
-      ...
-    },
-    "extensionProfile": {
-      ...
-    },
-    "networkProfile": {
-      ...
-    },
-    "osProfile": {
-      ...
-    },
-    "securityProfile": {
-      ...
-    },
-    "storageProfile": {
-      "dataDisks": [
-        {
-          "caching": "None",
-          "createOption": "Empty",
-          "deleteOption": "Delete",
-          "diskIOPSReadWrite": 16000,
-          "diskMBpsReadWrite": 1000,
-          "diskSizeGB": 1024,
-          "lun": 0,
-          "managedDisk": {
-            "storageAccountType": "PremiumV2_LRS"
-          },
-          "writeAcceleratorEnabled": false
-        }
-      ],
-      "diskControllerType": "NVMe",
-      "imageReference": {
-        "offer": "ubuntu-24_04-lts",
-        "publisher": "canonical",
-        "sku": "server",
-        "version": "latest"
-      },
-      "osDisk": {
-        ...
-      }
-    },
-    "timeCreated": "2026-05-12T08:07:36.0277663+00:00"
-  },
-  "zoneBalance": false,
-  "zones": [
-    "1",
-    "2",
-    "3"
-  ]
-}
-```
-
-### Verification
-
-#### Check #1
-
-Command:
-
-```cmd
-az vmss show \
-   -g central-us-amd \
-   -n test-vmss \
-   --query "virtualMachineProfile.storageProfile.dataDisks[].{lun:lun, diskSizeGB:diskSizeGB, diskIOPSReadWrite:diskIOPSReadWrite, diskMBpsReadWrite:diskMBpsReadWrite}" \
-   -o table
-```
-
-Response:
-
-```bash
-Lun
------
-0
-```
-
-#### Check #2
-
-Command:
-
-```cmd
-az vmss show \
-   -g central-us-amd \
-   -n test-vmss \
-   --query "virtualMachineProfile.storageProfile.dataDisks[]" \
-   -o json
-```
-
-Response:
-
-```json
-[
-  {
-    "caching": "None",
-    "createOption": "Empty",
-    "deleteOption": "Delete",
-    "diskIopsReadWrite": null,
-    "diskMBpsReadWrite": null,
-    "diskSizeGb": 1024,
-    "lun": 0,
-    "managedDisk": {
-      "diskEncryptionSet": null,
-      "securityProfile": null,
-      "storageAccountType": "PremiumV2_LRS"
-    },
-    "name": null,
-    "writeAcceleratorEnabled": false
-  }
-]
-```
+Leverage the azure cli commands
 
 ---
 
@@ -335,3 +183,168 @@ Comparing API responses (portal <--> cloud shell):
 Comparing API response to Portal UI:
 
 ![image](./media/new-instance-disk-02.png)
+
+---
+
+## Robin's Initial Testing
+
+### Update
+
+Command:
+
+```cmd
+az vmss update \
+   -g central-us-amd \
+   -n test-vmss \
+   --set virtualMachineProfile.storageProfile.dataDisks[0].diskIOPSReadWrite=16000 \
+   virtualMachineProfile.storageProfile.dataDisks[0].diskMBpsReadWrite=1000
+```
+
+Response:
+
+```json
+{
+  "additionalCapabilities": {
+    "hibernationEnabled": false
+  },
+  "constrainedMaximumCapacity": false,
+  "etag": "\"6\"",
+  "highSpeedInterconnectPlacement": "None",
+  "id": "/subscriptions/.../resourceGroups/central-us-amd/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss",
+  "location": "centralus",
+  "name": "test-vmss",
+  "orchestrationMode": "Flexible",
+  "platformFaultDomainCount": 1,
+  "provisioningState": "Succeeded",
+  "resourceGroup": "central-us-amd",
+  "scaleInPolicy": {
+    "forceDeletion": false,
+    "rules": [
+      "Default"
+    ]
+  },
+  "singlePlacementGroup": false,
+  "sku": {
+    "capacity": 0,
+    "name": "Standard_E4as_v7",
+    "tier": "Standard"
+  },
+  "timeCreated": "2026-05-12T07:58:47.9250241+00:00",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "uniqueId": "986fcb0e-99f0-41da-b58b-a5bf5f804139",
+  "upgradePolicy": {
+    "mode": "Manual"
+  },
+  "virtualMachineProfile": {
+    "diagnosticsProfile": {
+      ...
+    },
+    "extensionProfile": {
+      ...
+    },
+    "networkProfile": {
+      ...
+    },
+    "osProfile": {
+      ...
+    },
+    "securityProfile": {
+      ...
+    },
+    "storageProfile": {
+      "dataDisks": [
+        {
+          "caching": "None",
+          "createOption": "Empty",
+          "deleteOption": "Delete",
+          "diskIOPSReadWrite": 16000,
+          "diskMBpsReadWrite": 1000,
+          "diskSizeGB": 1024,
+          "lun": 0,
+          "managedDisk": {
+            "storageAccountType": "PremiumV2_LRS"
+          },
+          "writeAcceleratorEnabled": false
+        }
+      ],
+      "diskControllerType": "NVMe",
+      "imageReference": {
+        "offer": "ubuntu-24_04-lts",
+        "publisher": "canonical",
+        "sku": "server",
+        "version": "latest"
+      },
+      "osDisk": {
+        ...
+      }
+    },
+    "timeCreated": "2026-05-12T08:07:36.0277663+00:00"
+  },
+  "zoneBalance": false,
+  "zones": [
+    "1",
+    "2",
+    "3"
+  ]
+}
+```
+
+### Verification
+
+#### Check #1
+
+Command:
+
+```cmd
+az vmss show \
+   -g central-us-amd \
+   -n test-vmss \
+   --query "virtualMachineProfile.storageProfile.dataDisks[].{lun:lun, diskSizeGB:diskSizeGB, diskIOPSReadWrite:diskIOPSReadWrite, diskMBpsReadWrite:diskMBpsReadWrite}" \
+   -o table
+```
+
+Response:
+
+```bash
+Lun
+-----
+0
+```
+
+#### Check #2
+
+Command:
+
+```cmd
+az vmss show \
+   -g central-us-amd \
+   -n test-vmss \
+   --query "virtualMachineProfile.storageProfile.dataDisks[]" \
+   -o json
+```
+
+Response:
+
+```json
+[
+  {
+    "caching": "None",
+    "createOption": "Empty",
+    "deleteOption": "Delete",
+    "diskIopsReadWrite": null,
+    "diskMBpsReadWrite": null,
+    "diskSizeGb": 1024,
+    "lun": 0,
+    "managedDisk": {
+      "diskEncryptionSet": null,
+      "securityProfile": null,
+      "storageAccountType": "PremiumV2_LRS"
+    },
+    "name": null,
+    "writeAcceleratorEnabled": false
+  }
+]
+```
+
+---
+
